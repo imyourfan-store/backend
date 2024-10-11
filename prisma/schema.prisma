@@ -19,13 +19,15 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String     @id @default(uuid())
+  email     String     @unique
   name      String
   password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      Role       @default(USER)
+  Cart      Cart?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Purchase  Purchase[]
 }
 
 model Category {
@@ -37,13 +39,60 @@ model Category {
 }
 
 model Product {
-  id          String     @id @default(uuid())
-  name        String
-  description String
-  slug        String     @unique
-  price       Float
-  stock       Int
-  Categories  Category[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id           String             @id @default(uuid())
+  name         String
+  description  String
+  slug         String             @unique
+  price        Float
+  stock        Int
+  Categories   Category[]
+  productImgs  String[]
+  CartProducts CartProduct[]
+  Purchases    ProductPurchased[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model Cart {
+  id        String        @id @default(uuid())
+  userId    String        @unique
+  Products  CartProduct[]
+  User      User          @relation(fields: [userId], references: [id])
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model CartProduct {
+  id        String   @id @default(uuid())
+  cartId    String
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Cart      Cart     @relation(fields: [cartId], references: [id])
+  Product   Product  @relation(fields: [productId], references: [id])
+
+  @@unique([cartId, productId]) // This ensures a unique combination of cartId and productId
+}
+
+model Purchase {
+  id        String             @id @default(uuid())
+  userId    String
+  Products  ProductPurchased[]
+  User      User               @relation(fields: [userId], references: [id])
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+}
+
+model ProductPurchased {
+  id         String   @id @default(uuid())
+  productId  String
+  purchaseId String
+  quantity   Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Product    Product  @relation(fields: [productId], references: [id])
+  Purchase   Purchase @relation(fields: [purchaseId], references: [id])
+
+  @@unique([productId, purchaseId]) // This ensures a unique combination of productId and purchaseId
 }

@@ -1,5 +1,5 @@
 import { BcryptService } from '@/api/services/bcrypt.service';
-import { UserDAL } from '../user/user.dal';
+import { UserDAL } from '../users/user.dal';
 import { LoginSchema, SignupSchema } from './auth.schemas';
 import { JwtService } from '@/api/services/jwt.service';
 

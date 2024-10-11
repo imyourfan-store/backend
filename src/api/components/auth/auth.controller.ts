@@ -22,5 +22,5 @@ export const login = async (req: Request, res: Response) => {
   const { user, token } = await authService.login(data);
 
   res.cookie('jwt', token, { expires: tokenExpirationDate, httpOnly: true, secure: secureCookie });
-  res.status(200).json({ user });
+  res.status(200).json({ user, token });
 };

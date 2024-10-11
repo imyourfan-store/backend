@@ -34,4 +34,18 @@ export class UserDAL {
 
     return UserFactory.createUserFromDB(user);
   };
+
+  getUserById = async (id: string) => {
+    const user = await this.client.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return UserFactory.createUserFromDB(user);
+  };
 }
